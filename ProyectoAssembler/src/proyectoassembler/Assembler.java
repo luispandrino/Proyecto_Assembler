@@ -11,19 +11,19 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
- * @author Luis Andrino
+ * @author ASUS
  */
-public class Assembler extends javax.swing.JDialog {
+public class Assembler extends javax.swing.JFrame {
 
-    String Ruta = "";
     /**
      * Creates new form Assembler
      */
-    public Assembler(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    //variable global que guardda la ruta
+    String Ruta ="";
+
+    public Assembler() {
         initComponents();
-        
-    }
+            }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,10 +38,11 @@ public class Assembler extends javax.swing.JDialog {
         Convertir = new javax.swing.JButton();
         txtRuta = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        lblTermino = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        Cargar.setText("Cargar Archivo");
+        Cargar.setText("Cargar");
         Cargar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CargarActionPerformed(evt);
@@ -55,40 +56,49 @@ public class Assembler extends javax.swing.JDialog {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Lucida Sans Typewriter", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Perpetua Titling MT", 1, 24)); // NOI18N
         jLabel1.setText("Proyecto Assembler");
+
+        lblTermino.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 121, Short.MAX_VALUE)
-                        .addComponent(jLabel1))
-                    .addComponent(txtRuta))
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
+                .addComponent(txtRuta)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Cargar)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(Convertir, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(186, 186, 186))
+                .addGap(179, 179, 179))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblTermino))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(105, 105, 105)
+                        .addComponent(jLabel1)))
+                .addContainerGap(105, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(63, 63, 63)
                 .addComponent(jLabel1)
-                .addGap(55, 55, 55)
+                .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Cargar)
-                    .addComponent(txtRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addComponent(Convertir, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
+                    .addComponent(txtRuta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Cargar))
+                .addGap(30, 30, 30)
+                .addComponent(Convertir, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(lblTermino)
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         pack();
@@ -96,7 +106,7 @@ public class Assembler extends javax.swing.JDialog {
 
     private void CargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CargarActionPerformed
         // TODO add your handling code here:
-         JFileChooser dialogo =new JFileChooser();
+        JFileChooser dialogo =new JFileChooser();
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archivo asm", "asm");
         File ficheroImagen;
         String rutaArchivo;
@@ -109,15 +119,14 @@ public class Assembler extends javax.swing.JDialog {
             Ruta = rutaArchivo;
             
         }
-        
-        
     }//GEN-LAST:event_CargarActionPerformed
 
     private void ConvertirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConvertirActionPerformed
         // TODO add your handling code here:
-        ProyectoAssembler.Convertir(Ruta);
-        
-      
+        MasterAssembler.Convertir(Ruta);
+        if (MasterAssembler.Termino()) {
+            lblTermino.setText("el archivo se convirtio con exito, porfavor revise la carpeta donde subio el archivo");
+        }
     }//GEN-LAST:event_ConvertirActionPerformed
 
     /**
@@ -147,17 +156,10 @@ public class Assembler extends javax.swing.JDialog {
         }
         //</editor-fold>
 
-        /* Create and display the dialog */
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Assembler dialog = new Assembler(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                new Assembler().setVisible(true);
             }
         });
     }
@@ -166,6 +168,7 @@ public class Assembler extends javax.swing.JDialog {
     private javax.swing.JButton Cargar;
     private javax.swing.JButton Convertir;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lblTermino;
     private javax.swing.JTextField txtRuta;
     // End of variables declaration//GEN-END:variables
 }
