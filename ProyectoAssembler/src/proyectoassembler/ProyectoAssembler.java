@@ -208,6 +208,31 @@ public class ProyectoAssembler {
 		
 		return numALine; 
 	}
+    //Convertidor de Decimal a Binario
+	public static String decToBin(String subDec){
+		String binaryString = "";
+		int subInt = Integer.parseInt(subDec);
+		int bP;
+		double binPow;
+		double power = 14;
+		double two = 2;
+		while(!(power < 0)){
+			binPow = Math.pow(two, power);
+			bP = (int) binPow;
+			if(subInt >= bP){
+
+				subInt = subInt - bP;
+				binaryString = binaryString.concat("1");
+				power--;
+			}
+			else{
+
+				binaryString = binaryString.concat("0");
+				power--;
+			}
+		}
+		return binaryString;
+	}	
 
     
 }
