@@ -235,4 +235,161 @@ public class ProyectoAssembler {
 	}	
 
     
+	public static String assignInst(String newLine){
+		newLine = newLine.trim();
+		int indexEqual = newLine.indexOf('=');
+		String subDest = newLine.substring(0, indexEqual);
+		String subComp = newLine.substring(indexEqual+1);
+		String binDest = ""; //Binario para Dest
+		String Comp = "";//Binary para Comp
+		String remLine = ""; //resto de codigo binario
+		String Jump = "000";
+		
+
+		Comp = compDict(subComp);
+
+		binDest = destDict(subDest);
+
+		remLine = Comp + binDest + Jump;
+		return remLine;
+	
+	}
+
+	public static String jumpInst(String jumpLine){
+		int indexSemi = jumpLine.indexOf(';');
+		String subComp = jumpLine.substring(0, indexSemi);
+		String subJump = jumpLine.substring(indexSemi+1);
+		String Comp = "";
+		String noDest = "";
+		String Dest = "";
+		String Jump = "";
+		String total = "";
+		jumpLine = jumpLine.trim();	
+		Comp = compDict(subComp);
+		Dest = destDict(noDest);
+		
+
+		//Tabla JUMP
+		switch(subJump.trim()){
+		case "JGT": Jump = "001";
+		break;
+		case "JEQ": Jump = "010";
+		break;
+		case "JGE": Jump = "011";
+		break;
+		case "JLT": Jump = "100";
+		break;
+		case "JNE": Jump = "101";
+		break;
+		case "JLE": Jump = "110";
+		break;
+		case "JMP": Jump = "111";
+		break;
+		default: System.out.println("ERROR IN JUMP");
+		}
+
+		total = Comp + Dest + Jump;
+		return total;
+
+		
+
+
+	}
+
+
+	public static String compDict(String lineComp){
+		lineComp = lineComp.trim();
+		String binComp = "";
+		String oneA = "";
+	
+		if(lineComp.indexOf('A') != -1){
+			oneA = "0";
+		}
+		else if(lineComp.indexOf('M') != -1){
+			oneA = "1";
+		}
+		else{
+			oneA = "0";
+		}
+		
+		switch(lineComp.trim()){
+		case "0": binComp = "101010"; 
+		break;
+		case "1": binComp = "111111";
+		break;
+		case "-1": binComp = "111010";
+		break;
+		case "D": binComp = "001100";
+		break;
+		case ("A"):
+		case ("M"): binComp = "110000";
+		break;
+		case "!D": binComp = "001101";
+		break;
+		case ("!A"):
+		case ("!M"): binComp = "110001";
+		break;
+		case "-D": binComp = "001111";
+		break;
+		case ("-A"):
+		case ("-M"): binComp = "110011";
+		break;
+		case "D+1": binComp = "011111";
+		break;
+		case ("A+1"):
+		case ("M+1"): binComp = "110111";
+		break;
+		case "D-1": binComp = "001110";
+		break;
+		case ("A-1"):
+		case ("M-1"): binComp = "110010";
+		break;
+		case ("D+A"):
+		case ("D+M"): binComp = "000010";
+		break;
+		case ("D-A"):
+		case ("D-M"): binComp = "010011";
+		break;
+		case ("A-D"):
+		case ("M-D"): binComp = "000111";
+		break;
+		case ("D&A"):
+		case ("D&M"): binComp = "000000";
+		break;
+		case ("D|A"):
+		case ("D|M"): binComp = "010101";
+		break;
+		default: System.out.println("ERROR");
+		}
+
+		String Comp = oneA + binComp;
+		return Comp;
+	}
+
+	public static String destDict(String destLine){
+		String binDest = "";		
+
+
+		if (destLine.indexOf("A") != -1){
+			binDest = binDest.concat("1");
+		}
+		else{
+			binDest = binDest.concat("0");
+		}
+		if (destLine.indexOf("D") != -1){
+			binDest = binDest.concat("1");
+		}
+		else{
+			binDest = binDest.concat("0");
+		}
+		if (destLine.indexOf("M") != -1){
+			binDest = binDest.concat("1");
+		}
+		else{
+			binDest = binDest.concat("0");
+		}
+
+		return binDest;
+	}
+	
 }
