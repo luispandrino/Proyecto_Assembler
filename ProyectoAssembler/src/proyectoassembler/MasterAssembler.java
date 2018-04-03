@@ -24,14 +24,14 @@ public class MasterAssembler {
 	static int PCROM = 0;
         static boolean Terminado = false;
 	static String LineaPrevia = "";
-    public static void Convertir (String args) {
+    public static void Convertir (String ruta) {
         // TODO code application logic here
-        		//Subida del Archivo
-		if(args.length()> 0){	
-			//Arreglo de 16 bits para instrucciones
+        		//Lectura del archivo
+		if(ruta.length() > 0){	
+			//Arreglo de 16 Bits para instrucciones
 			char [] binArray = new char[16];
 			String binValue;
-			File newFile = new File(args);
+			File newFile = new File(ruta);
 			try(Scanner bananaScan = new Scanner(newFile);){
 				String baLine = "";
 				String subLine = "";
@@ -42,7 +42,6 @@ public class MasterAssembler {
 							//Revisa si la sublinea es una palabra reservada
 							memMap.put(subLine, Integer.toString(PCROM));
 					}
-	
 					baLine = baLine.trim();
 					if((baLine.length() > 0) && (baLine.charAt(0) != '/')&& (baLine.charAt(0) != '(')){
 						PCROM++;
@@ -52,10 +51,10 @@ public class MasterAssembler {
 			}catch(IOException x){
 				System.err.format("IOException: %s%n", x);
 			}
+                        //Escritura del nuevo archivo
 			try(Scanner fileScan = new Scanner(newFile);){
 				String line = "";
-				String hackFile = args.substring(0, args.indexOf(".asm")) + ".hack";
-			    //Archivo  HACK Resultado
+				String hackFile = ruta.substring(0, ruta.indexOf(".asm")) + ".hack";
 				File outFile = new File(hackFile);
 				FileOutputStream streamOut = new FileOutputStream(outFile);
 				BufferedWriter fileBuff = new BufferedWriter(new OutputStreamWriter(streamOut));	
@@ -64,15 +63,15 @@ public class MasterAssembler {
 					line = line.trim();
 					if(line.indexOf('/') != -1){
 					line = line.substring(0,line.indexOf('/'));}
-					//Instruccion A
+                                        //Instruccion A
 					if ((line.length() > 0) && ((line.charAt(0) == '@') || (line.charAt(0)=='('))){
 						if (line.charAt(0)=='('){
 						}
 						else{
 						binArray[0] = '0';
 						String subLine = line.substring(1);
+						//Revisa si es una palabra reservada
 						String numLine = aDict(subLine);
-									
 						binValue = decToBin(numLine);
 						int count = 0;
 						int index = 1;
@@ -82,19 +81,20 @@ public class MasterAssembler {
 							count++;
 						}
 					 	for(int i=0; i < 16; i++){
+							System.out.print(binArray[i]);
 							fileBuff.write(binArray[i]);	
 						}
 						fileBuff.newLine();
+						System.out.println();
 					}}
+                                        //Instruccion C
 					else if((line.length() > 0) && ((line.indexOf('D')!=-1) || (line.indexOf('A')!=-1) || (line.indexOf('M')!=-1)
-						//Instruccion C
 						|| (line.indexOf('=')!=-1) || (line.indexOf(';')!=-1)) && (line.charAt(0) != '/') && (line.indexOf('(') == -1)){
-
 						for(int i=0; i < 3; i++){
 							binArray[i] = '1';
 						}
 						if (line.indexOf('=') > -1){
-						
+						//Instruccion de Asignación
 							binValue = assignInst(line);
 							int count = 0;
 							int index = 3;
@@ -104,13 +104,14 @@ public class MasterAssembler {
 								count++;
 							}
 							for(int i=0; i<16; i++){
+								System.out.print(binArray[i]);
 								fileBuff.write(binArray[i]);	
 							}
 							fileBuff.newLine();
+							System.out.println();
 						}
 						else if(line.indexOf(';') > -1){
 						//Instruccion Jump
-
 							binValue = jumpInst(line);
 							int count = 0;
 							int index = 3;
@@ -120,31 +121,28 @@ public class MasterAssembler {
 								count++;
 							}
 							for(int i=0; i<16; i++){
+								System.out.print(binArray[i]);
 								fileBuff.write(binArray[i]);	
 							}
 							fileBuff.newLine();
+							System.out.println();
 						}
 					}
 					
 				}fileBuff.close();
-                                Terminado = true;
-                                System.out.println("el archivo se convirtio con exito, porfavor revise la carpeta donde subio el archivo");
 			
 			}catch(IOException x){
 				System.err.format("IOException: %s%n", x);
 			}
 		}
 		else{
-		System.out.println("No se subio ningun archivo");
-	}
-        
+	          Terminado = false;
+		}
+                Terminado = true;
     }
     
     public static Boolean Termino(){
-        if (Terminado) {
-            return true;
-        }
-        return false;
+        return Terminado;
     }
     //Tabla de Simbolos
     public static String aDict(String aLine){
@@ -246,7 +244,7 @@ public class MasterAssembler {
 		return binaryString;
 	}	
 
-    
+    //Asignacion de Instruccion
 	public static String assignInst(String newLine){
 		newLine = newLine.trim();
 		int indexEqual = newLine.indexOf('=');
@@ -297,7 +295,7 @@ public class MasterAssembler {
 		break;
 		case "JMP": Jump = "111";
 		break;
-		default: System.out.println("ERROR IN JUMP");
+		default: System.out.println("ERROR EN JUMP");
 		}
 
 		total = Comp + Dest + Jump;
