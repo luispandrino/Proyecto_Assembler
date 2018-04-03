@@ -127,6 +127,9 @@ public class Assembler extends javax.swing.JFrame {
         if (MasterAssembler.Termino()) {
             lblTermino.setText("el archivo se convirtio con exito, porfavor revise la carpeta donde subio el archivo");
         }
+        else{
+            lblTermino.setText("Error de la lectura del archivo");
+        }
     }//GEN-LAST:event_ConvertirActionPerformed
 
     /**
