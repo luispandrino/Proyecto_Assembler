@@ -13,21 +13,18 @@ import java.util.*;
 import java.io.*;
 public class ProyectoAssembler {
 
-    /**
-     * @param args the command line arguments
-     */
     static HashMap <String, String> memMap = new HashMap <String, String>();
 	static	int mem = 16;
 	static int PCROM = 0;
 	static String LineaPrevia = "";
-    public static void main(String[] args) {
+    public static void Convertir (String args) {
         // TODO code application logic here
         		//Subida del Archivo
-		if(args.length > 0){	
+		if(args.length()> 0){	
 			//Arreglo de 16 bits para instrucciones
 			char [] binArray = new char[16];
 			String binValue;
-			File newFile = new File(args[0]);
+			File newFile = new File(args);
 			try(Scanner bananaScan = new Scanner(newFile);){
 				String baLine = "";
 				String subLine = "";
@@ -50,7 +47,7 @@ public class ProyectoAssembler {
 			}
 			try(Scanner fileScan = new Scanner(newFile);){
 				String line = "";
-				String hackFile = args[0].substring(0, args[0].indexOf(".asm")) + ".hack";
+				String hackFile = args.substring(0, args.indexOf(".asm")) + ".hack";
 			    //Archivo  HACK Resultado
 				File outFile = new File(hackFile);
 				FileOutputStream streamOut = new FileOutputStream(outFile);
